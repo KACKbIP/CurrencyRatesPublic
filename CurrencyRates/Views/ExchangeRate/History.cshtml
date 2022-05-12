@@ -1,0 +1,201 @@
+﻿@using CurrencyRates.Models.ExchangeRate
+@model List<ExchangeModel>
+@{
+    ViewBag.Title = "История курсов валют";
+
+}
+@{
+    Layout = "_Layout";
+}
+@section Scripts
+{  
+    <script type="text/javascript">        
+        function filter() {
+            let from = $('#from').val();
+            let to = $('#to').val();
+            location.replace("/ExchangeRate/History?from=" + from + "&to=" + to);
+        }
+    </script>
+}
+<style type="text/css">
+    .chartist-tooltip {
+        position: fixed;
+    }
+
+    .reportNC {
+        width: 100%;
+        text-align: center;
+        border-collapse: separate;
+        margin: 0 auto;
+    }
+</style>
+
+<div style="margin-top: 10px;text-align:center">
+    <h4>Фильтр по дате</h4>
+    <br />
+    <div class="form-group d-flex row align-items-center justify-content-center">
+        <div class="input-group date col-1" data-provide="datepicker" data-date-format="dd.mm.yyyy">
+            <input type="text" id="from" value="@ViewBag.From" class="form-control">
+            <div class="input-group-addon">
+                <span class="glyphicon glyphicon-th"></span>
+            </div>
+        </div>
+
+        <div class="input-group date col-1" data-provide="datepicker" data-date-format="dd.mm.yyyy" >
+            <input type="text" id="to" value="@ViewBag.To" class="form-control">
+            <div class="input-group-addon">
+                <span class="glyphicon glyphicon-th"></span>
+            </div>
+        </div>
+        <input type="button" onclick="filter()" value="Отобразить" />
+    </div>
+</div>
+<div>
+    <table class="reportNC">
+        <thead>
+            <tr style="background: #ccc;">
+                <th style="text-align: center; background: #404040; color: #fff; padding: 5px 0;">
+                    Банк
+                </th>
+                <th style="text-align: center; background: #404040; color: #fff; padding: 5px 0;">
+                    Валюта конвертации
+                </th>
+                <th style="text-align: center; background: #404040; color: #fff; padding: 5px 0;">
+                    Продажа
+                </th>
+                <th style="text-align: center; background: #404040; color: #fff; padding: 5px 0;">
+                    Покупка
+                </th>
+                <th style="text-align: center; background: #404040; color: #fff; padding: 5px 0;">
+                    Дата обновления
+                </th>
+                <th style="text-align: center; background: #404040; color: #fff; padding: 5px 0;">
+                    Авто обновлен
+                </th>
+                <th style="text-align: center; background: #404040; color: #fff; padding: 5px 0;">
+                    Ручной ввод
+                </th>
+                <th style="text-align: center; background: #404040; color: #fff; padding: 5px 0;">
+                    Кем изменено
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model != null)
+            {
+                @if (User.IsInRole("592F3B0D-2C64-4D42-A0B1-8DB14E424FA2"))
+                {
+                    @foreach (var item in Model)
+                    {
+                        <tr align="center">
+                            <td style="text-align: center;" class="@item.Id">
+                                @item.BankName
+                            </td>
+                            <td class="@item.Id">
+                                <table>
+                                    <tr style="font-size:20px">
+                                        <td>@item.CurrencyInISO</td>
+                                        <td>&rarr;</td>
+                                        <td>@item.CurrencyOutISO</td>
+                                    </tr>
+                                </table>
+                            </td>
+                            <td style="text-align: center;font-size:20px;" class="@item.Id">
+                                <b><input id="@item.Id sell" readonly name="sell" value="@item.SellingRate" /></b>
+                            </td>
+                            <td style="text-align: center;font-size:20px" class="@item.Id">
+                                <b><input id="@item.Id purch" readonly name="purch" value="@item.PurchanseRate" /></b>
+                            </td>
+                            <td style="text-align: center;" class="@item.Id">
+                                @item.UpdateDate
+                            </td>
+                            @if (item.IsUpdateAuto)
+                            {
+                                <td style="text-align: center;color:green" class="@item.Id">
+                                    <b>ДА</b>
+                                </td>
+                            }
+                            else
+                            {
+                                <td style="text-align: center;color:red" class="@item.Id">
+                                    <b>НЕТ</b>
+                                </td>
+                            }
+                            @if (item.IsManualInput)
+                            {
+                                <td style="text-align: center;color:green" class="@item.Id">
+                                    <b>ДА</b>
+                                </td>
+                            }
+                            else
+                            {
+                                <td style="text-align: center;color:red" class="@item.Id">
+                                    <b>НЕТ</b>
+                                </td>
+                            }
+                            <td style="text-align: center;" class="@item.Id">
+                                @item.UserFIO
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    @foreach (var item in Model.Where(m=>m.WithPercent==false).ToList())
+                    {
+                        <tr align="center">
+                            <td style="text-align: center;" class="@item.Id">
+                                @item.BankName
+                            </td>
+                            <td class="@item.Id">
+                                <table>
+                                    <tr style="font-size:20px">
+                                        <td>@item.CurrencyInISO</td>
+                                        <td>&rarr;</td>
+                                        <td>@item.CurrencyOutISO</td>
+                                    </tr>
+                                </table>
+                            </td>
+                            <td style="text-align: center;font-size:20px;" class="@item.Id">
+                                <b><input id="@item.Id sell" readonly name="sell" value="@item.SellingRate" /></b>
+                            </td>
+                            <td style="text-align: center;font-size:20px" class="@item.Id">
+                                <b><input id="@item.Id purch" readonly name="purch" value="@item.PurchanseRate" /></b>
+                            </td>
+                            <td style="text-align: center;" class="@item.Id">
+                                @item.UpdateDate
+                            </td>
+                            @if (item.IsUpdateAuto)
+                            {
+                                <td style="text-align: center;color:green" class="@item.Id">
+                                    <b>ДА</b>
+                                </td>
+                            }
+                            else
+                            {
+                                <td style="text-align: center;color:red" class="@item.Id">
+                                    <b>НЕТ</b>
+                                </td>
+                            }
+                            @if (item.IsManualInput)
+                            {
+                                <td style="text-align: center;color:green" class="@item.Id">
+                                    <b>ДА</b>
+                                </td>
+                            }
+                            else
+                            {
+                                <td style="text-align: center;color:red" class="@item.Id">
+                                    <b>НЕТ</b>
+                                </td>
+                            }
+                            <td style="text-align: center;" class="@item.Id">
+                                @item.UserFIO
+                            </td>
+                        </tr>
+                    }
+                }
+            }
+        </tbody>
+    </table>
+</div>

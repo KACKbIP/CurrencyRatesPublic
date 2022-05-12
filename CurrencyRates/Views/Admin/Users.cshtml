@@ -1,0 +1,15 @@
+﻿@model List<CurrencyRates.Models.Admin.Users>
+@{
+    Layout = null;
+}
+
+<select id="userId" class="form-control">
+
+    @if (Model != null)
+    {
+        @foreach (var item in Model.OrderBy(m => m.Id))
+        {
+            <option value="@item.Id">@item.Name</option>
+        }
+    }
+</select>

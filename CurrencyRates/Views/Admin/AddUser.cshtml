@@ -1,0 +1,84 @@
+﻿@{
+    ViewBag.Title = "Добавление пользователя";
+
+}
+@{
+    Layout = "_Layout";
+}
+@section Scripts
+{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#roles').load("/Admin/Roles");
+        });
+        function addUser() {            
+            let name = document.getElementById('name').value;
+            let surname = document.getElementById('surname').value;
+            let login = document.getElementById('login').value;
+            let password = document.getElementById('password').value;
+            let passwordAccept = document.getElementById('passwordAccept').value;
+            let roleId = $('#roleId').val();
+
+            if (password != passwordAccept) {
+                alert("Неверно указан пароль подтверждения!!!")
+            }
+            else {
+                $.ajax({
+                    type: "POST",
+                    url: "/Admin/AddUser",
+                    data: {
+                        name: name,
+                        surname: surname,
+                        login: login,
+                        password: password,
+                        roleId: roleId,
+                    },
+
+                    success: function (result) {
+                        if (result == "true") {
+                            alert("Сохранено");
+                            window.location.href = "/Admin/Index";
+                        }
+                        else { alert(result) }
+
+                    }
+
+
+                })
+            }
+
+        }
+    </script>
+}
+<div class="alert alert-primary" style="width:700px">
+    <div class="form-group d-flex row align-items-center justify-content-left">
+        <label class="col-5" for="name">Имя</label>
+        <input type="text" class="form-control col-6" id="name" aria-describedby="emailHelp" required>
+    </div>
+    <div class="form-group d-flex row align-items-center justify-content-left">
+        <label class="col-5" for="surname">Фамилия</label>
+        <input type="text" class="form-control col-6" id="surname" aria-describedby="emailHelp" required>
+    </div>
+    <div class="form-group d-flex row align-items-center justify-content-left">
+        <label class="col-5" for="login">Логин</label>
+        <input type="text" class="form-control col-6" id="login" aria-describedby="emailHelp" required>
+    </div>
+    <div class="form-group d-flex row align-items-center justify-content-left">
+        <label class="col-5" for="password">Пароль</label>
+        <input type="password" class="form-control col-6" id="password" aria-describedby="emailHelp" required>
+    </div>
+    <div class="form-group d-flex row align-items-center justify-content-left">
+        <label class="col-5" for="passwordAccept">Подтверждение пароля</label>
+        <input type="password" class="form-control col-6" id="passwordAccept" aria-describedby="emailHelp" required>
+    </div>
+    <div class="form-group d-flex row align-items-center justify-content-left">
+        <label class="col-5" for="roles">Роль</label>
+        <span id="roles">
+        </span>
+    </div>
+</div>
+<div>
+    <div class="form-group d-flex row align-items-top">
+        <button type="button" onclick="addUser()" class="btn btn-success" style="margin-left: 3%;">Добавить</button>
+    </div>
+</div>

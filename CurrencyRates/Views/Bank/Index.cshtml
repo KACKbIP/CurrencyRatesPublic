@@ -1,0 +1,113 @@
+﻿@model List<CurrencyRates.Models.BankModel>
+@{
+    ViewBag.Title = "Список банков";
+}
+@{
+    Layout = "_Layout";
+}
+
+@{
+    string ClassTd = "";
+    var OrderId = Model.Select(el => el.Id).ToList();
+
+}
+
+<style type="text/css">
+    .chartist-tooltip {
+        position: fixed;
+    }
+
+    .reportNC {
+        width: 100%;
+        text-align: center;
+        border-collapse: separate;
+        margin: 0 auto;
+    }
+</style>
+@section Scripts
+{
+    <script type="text/javascript">
+        function updateBank(isActive,id) {           
+
+            $.ajax({
+                type: "POST",
+                url: "/Bank/UpdateBank",
+                data: {
+                    isActive: isActive,
+                    id: id
+                },
+
+                success: function (result) {                    
+                        window.location.href = "/Bank/Index";
+                }
+
+
+            })
+
+        }
+        function deleteBank(id) {
+
+            $.ajax({
+                type: "POST",
+                url: "/Bank/DeleteBank",
+                data: {
+                    id: id
+                },
+
+                success: function (result) {
+                    window.location.href = "/Bank/Index";
+                }
+
+
+            })
+
+        }
+    </script>
+}
+
+<div>
+    @Html.ActionLink("Добавить банк", "AddBank")
+</div>
+<div>
+    <table class="reportNC">
+        <thead>
+            <tr style="background: #ccc;">
+                <th style="text-align: center; background: #404040; color: #fff; padding: 5px 0;">
+                    Банк
+                </th>
+                <th style="text-align: center; background: #404040; color: #fff; padding: 5px 0;">
+                    ID в процессинге
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.OrderBy(m => m.Id))
+            {
+                <tr align="center">
+                    <td style="text-align: center;" class="@ClassTd">
+                        @item.Name
+                    </td>
+                    <td style="text-align: center;" class="@ClassTd">
+                        @item.ProcessingId
+                    </td>
+
+                    @if (item.IsActive)
+                    {
+                        <td style="text-align: center;" class="@ClassTd">
+                            <input type="button" onclick="updateBank(false,@item.Id)" value="Отключить" />
+                        </td>
+                    }
+                    else
+                    {
+                        <td style="text-align: center;" class="@ClassTd">
+                            <input type="button" onclick="updateBank(true,@item.Id)" value="Включить" />
+                        </td>
+                    }
+                    <td style="text-align: center;" class="@ClassTd">
+                        <input type="button" onclick="deleteBank(@item.Id)" value="Удалить" />
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

@@ -1,0 +1,80 @@
+﻿@model List<CurrencyRates.Models.CurrencyModel>
+@{
+    ViewBag.Title = "Валюты";
+}
+@{
+    Layout = "_Layout";
+}
+
+@{
+    string ClassTd = "";
+    var OrderId = Model.Select(el => el.Id).ToList();
+
+}
+@section Scripts
+{
+    <script type="text/javascript">
+        function deleteCurrency(id) {
+            $.ajax({
+                type: "POST",
+                url: "/Currency/Delete",
+                data: {
+                    id: id
+                },
+
+                success: function (result) {
+                    window.location.href = "/Currency/Index";
+                }
+
+
+            })
+
+        }
+    </script>
+}
+<style type="text/css">
+    .chartist-tooltip {
+        position: fixed;
+    }
+
+    .reportNC {
+        width: 100%;
+        text-align: center;
+        border-collapse: separate;
+        margin: 0 auto;
+    }
+</style>
+
+<div>
+    @Html.ActionLink("Добавить валюту", "AddCurrency")
+</div>
+<div>
+    <table class="reportNC">
+        <thead>
+            <tr style="background: #ccc;">
+                <th style="text-align: center; background: #404040; color: #fff; padding: 5px 0;">
+                    Валюта
+                </th>
+                <th style="text-align: center; background: #404040; color: #fff; padding: 5px 0;">
+                    ISO
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.OrderBy(m => m.Id))
+            {
+                <tr align="center">
+                    <td style="text-align: center;" class="@ClassTd">
+                        @item.Name
+                    </td>
+                    <td style="text-align: center;" class="@ClassTd">
+                        @item.ISO
+                    </td>
+                    <td style="text-align: center;" class="@ClassTd">
+                        <input type="button" onclick="deleteCurrency(@item.Id)" value="Удалить" />
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

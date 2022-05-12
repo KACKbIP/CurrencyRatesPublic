@@ -1,0 +1,15 @@
+﻿@model List<CurrencyRates.Models.BankModel>
+@{
+    Layout = null;
+}
+
+<select id="bankList" class="form-control col-10" >
+
+    @if (Model != null)
+    {
+        @foreach (var item in Model)
+        {
+            <option value="@item.Id">@item.Name</option>
+        }
+    }
+</select>

@@ -1,0 +1,30 @@
+﻿@model List<CurrencyRates.Models.CurrencyModel>
+@{
+    Layout = null;
+}
+
+
+<select id="currencyListIn" class="form-control col-6">
+
+    @if (Model != null)
+    {
+        @foreach (var item in Model.OrderBy(m => m.Id))
+        {
+            @if (TempData["InId"] != null)
+            {
+                @if (Convert.ToInt32(TempData["InId"]) == item.Id)
+                {
+                    <option selected value="@item.Id">@item.ISO</option>
+                }
+                else
+                {
+                    <option value="@item.Id">@item.ISO</option>
+                }
+            }
+            else
+            {
+                <option value="@item.Id">@item.ISO</option>
+            }
+        }
+    }
+</select>

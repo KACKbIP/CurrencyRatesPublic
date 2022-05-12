@@ -1,0 +1,109 @@
+﻿@{
+    ViewBag.Title = "Добавление курсов валют";
+
+}
+@{
+    Layout = "_Layout";
+}
+@section Scripts
+{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#banks').load("/Bank/List");
+            $('#currencyInId').load("/Currency/ListIn");
+            $('#currencyOutId').load("/Currency/ListOut");
+            $("#selling").keypress(function (e) {
+                var keyCode = e.which;
+                if (keyCode != 44) {
+                    if ((keyCode != 8 || keyCode == 32) && (keyCode < 48 || keyCode > 57)) {
+                        return false;
+                    }
+                }
+            });
+            $("#purch").keypress(function (e) {
+                var keyCode = e.which;
+                if (keyCode != 44) {
+                    if ((keyCode != 8 || keyCode == 32) && (keyCode < 48 || keyCode > 57)) {
+                        return false;
+                    }
+                }
+            });
+        });
+        function addExchange() {
+            let selling = document.getElementById('selling').value;
+            let purch = document.getElementById('purch').value;
+            let percent = document.getElementById('percent').value;
+            let bankId = $('#bankList').val();
+            let currIn = $('#currencyListIn').val();
+            let currOut = $('#currencyListOut').val();
+            $.ajax({
+                type: "POST",
+                url: "/ExchangeRate/AddExchangeRate",
+                data: {
+                    bankId: bankId,
+                    currencyInId: currIn,
+                    currencyOutId: currOut,
+                    selling: selling,
+                    purch: purch,
+                    percent: percent
+                },
+
+                success: function (result) {
+                    if (result == "true") {
+                        alert("Сохранено");
+                        window.location.href = "/ExchangeRate/Index";
+                    }
+                    else { alert(result) }
+
+                }
+
+
+            })
+
+        }
+    </script>
+}
+    <div class="row">
+        <div class="col-6">
+            <div class="alert alert-primary">
+                <div class="form-group d-flex row align-items-center justify-content-left">
+                    <label class="col-5" for="bankList">Банк</label>
+                    <span id="banks" class="col-6">
+                    </span>
+                </div>
+                <div class="form-group d-flex row align-items-center justify-content-left">
+                    <label class="col-5" for="currencyList">Старшая валюта</label>
+                    <span id="currencyInId" class="col-6">
+                    </span>
+                </div>
+                <div class="form-group d-flex row align-items-center justify-content-left">
+                    <label class="col-5" for="currencyList">Младшая валюта</label>
+                    <span id="currencyOutId" class="col-6">
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="alert alert-warning">
+
+                <div class="form-group d-flex row align-items-center justify-content-left">
+                    <label class="col-5" for="selling">Курс продажи</label>
+                    <input pattern="[0-9] {3}" class="form-control col-5" id="selling" required>
+                </div>
+                <div class="form-group d-flex row align-items-center justify-content-left">
+                    <label class="col-5" for="purch">Курс покупки</label>
+                    <input class="form-control col-5" id="purch" required>
+                </div>
+                <div class="form-group d-flex row align-items-center justify-content-left">
+                    <label class="col-5" for="purch">Процент</label>
+                    <input class="form-control col-5" id="percent" required>
+                </div>
+            </div>
+            <center><h6>Вводить курс валюты через запятую!</h6></center>
+        </div>
+    </div>
+    <div>
+        <div class="form-group d-flex row align-items-top">
+            <button type="button" onclick="addExchange()" class="btn btn-success" style="margin-left: 3%;">Добавить</button>
+        </div>
+    </div>

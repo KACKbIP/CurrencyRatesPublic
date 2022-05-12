@@ -1,0 +1,59 @@
+﻿@{
+    ViewBag.Title = "Сменить роль";
+
+}
+@{
+    Layout = "_Layout";
+}
+@section Scripts
+{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#roles').load("/Admin/Roles");
+            $('#username').load("/Admin/Users");
+        });
+        function changeRole() {
+            let userId = $('#userId').val();
+            let roleId = $('#roleId').val();
+
+            
+                $.ajax({
+                    type: "POST",
+                    url: "/Admin/ChangeRoleUser",
+                    data: {
+                        userId: userId,
+                        roleId: roleId
+                    },
+
+                    success: function (result) {
+                        if (result == "true") {
+                            alert("Изменено");
+                            window.location.href = "/Admin/Index";
+                        }
+                        else { alert(result) }
+
+                    }
+
+
+                })
+        }
+    </script>
+}
+<div class="alert alert-primary" style="width:700px">
+    <div class="form-group d-flex row align-items-center justify-content-left">
+        <label class="col-5" for="username">Пользователь</label>
+        <span id="username">
+        </span>
+    </div>
+
+    <div class="form-group d-flex row align-items-center justify-content-left">
+        <label class="col-5" for="roles">Роль</label>
+        <span id="roles">
+        </span>
+    </div>
+</div>
+<div>
+    <div class="form-group d-flex row align-items-top">
+        <button type="button" onclick="changeRole()" class="btn btn-success" style="margin-left: 3%;">Сменить роль</button>
+    </div>
+</div>

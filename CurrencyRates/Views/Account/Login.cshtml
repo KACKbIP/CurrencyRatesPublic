@@ -1,0 +1,95 @@
+﻿@model CurrencyRates.Models.Account.LoginModel
+@{
+    ViewBag.Title = "Авторизация";
+}
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+    <link href="~/css/bootstrap.css" rel="stylesheet" />
+</head>
+<style type="text/css">
+    /* Styles for validation helpers*/
+    .field-validation-error {
+        color: #ff0000;
+    }
+
+    .field-validation-valid {
+        display: none;
+    }
+
+    .input-validation-error {
+        border: 1px solid #ff0000 !important;
+        background-color: #ffeeee !important;
+    }
+
+    .validation-summary-errors {
+        font-weight: bold !important;
+        color: #ff0000 !important;
+    }
+
+    .validation-summary-valid {
+        display: none;
+    }
+</style>
+@*@section scripts
+{
+    <script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+    <script type="text/javascript">
+        var buf = "";
+        $(document).ready(function () {
+            $(document).keydown(function (event) {
+                if (event.which != 13) return;
+            });
+            $(document).keypress(function (event) {
+                if (event.which == 36) { buf = "$"; return; }
+                if (event.which == 13) { return; }
+                buf += String.fromCharCode(event.which);
+            });
+        });
+    </script>
+}*@
+<center>
+    </br>
+    </br>
+    </br>
+    <h2>
+        Авторизация
+    </h2>
+
+    @using (Html.BeginForm())
+    {
+        @Html.ValidationSummary(true)
+        <div class="editor-label">
+            @Html.LabelFor(model => model.Login)
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(model => model.Login, new { placeholder = "Введите логин", required = "required" })
+        </div>
+        <div class="editor-field">
+            @Html.ValidationMessageFor(model => model.Login)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.Password)
+        </div>
+        <div class="editor-field">
+            @Html.PasswordFor(model => model.Password, new { placeholder = "Введите пароль", required = "required" })
+        </div>
+        <div class="editor-field">
+            @Html.ValidationMessageFor(model => model.Password)
+        </div>
+
+        @*<div class="editor-field">
+                @Html.EditorFor(model => model.IsRemember) @Html.LabelFor(model => model.IsRemember)
+            </div>
+            <div class="editor-field">
+                @Html.ValidationMessageFor(model => model.IsRemember)
+            </div>*@
+        <br />
+            <p>
+                <input id="submitBtn" type="submit" alt="Войти" value="Войти" class="btn btn-primary" />
+            </p>
+    }
+</center>
